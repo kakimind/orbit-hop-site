@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Orbit Hop — orbital arcade game for Android</title>
+<meta name="description" content="Tap to launch off one orbit and land on the next. 100 ranks, 100 collectible moons, 20 languages, and it plays offline.">
+<link rel="icon" href="icon.png">
+<meta property="og:title" content="Orbit Hop">
+<meta property="og:description" content="Tap to launch off one orbit and land on the next.">
+<meta property="og:image" content="icon.png">
+<style>
+:root{
+  --bg:#fbf8ff; --surface:#ffffff; --sc:#edecff; --sc-high:#e6e6ff;
+  --ink:#171a2e; --muted:#5E6479; --line:#D8DCE6;
+  --a:#E8502F; --b:#3e4ec9; --good:#1E9A57; --star:#C8871B;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,"Noto Sans",sans-serif;
+  --mono:ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);
+  font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:780px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-left)) 72px}
+
+.hero{text-align:center;padding:72px 0 8px}
+.hero img{width:104px;height:104px;border-radius:26px;display:block;margin:0 auto 26px}
+h1{font-size:clamp(40px,11vw,66px);line-height:1;letter-spacing:-.03em;margin:0 0 14px;font-weight:800}
+h1 i{font-style:normal;color:var(--a)}
+.tagline{font-size:clamp(17px,3.4vw,20px);color:var(--muted);margin:0 auto 34px;max-width:30ch}
+
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:56px;padding:0 30px;border-radius:9999px;background:var(--ink);color:var(--bg);
+  text-decoration:none;font-weight:700;font-size:17px}
+.cta:active{transform:scale(.985)}
+.soon{display:block;margin-top:14px;font-family:var(--mono);font-size:12.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+.how{background:var(--sc);border-radius:20px;padding:26px 24px;margin:56px 0 0}
+.how h2{margin:0 0 8px;font-size:19px;letter-spacing:-.01em}
+.how p{margin:0;color:#2b2f45}
+.how b{color:var(--a)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.tile b{display:block;font-family:var(--mono);font-size:21px;font-weight:700;letter-spacing:-.01em}
+.tile span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.tile.star b{color:var(--star)} .tile.cool b{color:var(--b)} .tile.good b{color:var(--good)}
+
+h2.section{font-size:21px;letter-spacing:-.01em;margin:56px 0 12px}
+ul{padding-left:22px;margin:0}
+li{margin:7px 0;color:#2b2f45}
+
+.note{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin:16px 0 0;font-size:15px;color:#2b2f45}
+.note a{color:var(--b)}
+
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:14.5px;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+footer a{color:var(--b)}
+.ko{margin-top:20px}
+.ko summary{cursor:pointer;font-weight:600;color:var(--b);padding:12px 0}
+.ko p{color:#2b2f45}
+
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0D1020;--surface:#171B2D;--sc:#1b2039;--sc-high:#222847;
+    --ink:#ECEEF7;--muted:#99A0BA;--line:#2A2F4D;--a:#FF7A55;--b:#7C8BFF;
+    --good:#3CC57A;--star:#E0A33A}
+  li,.how p,.note,.ko p{color:#d6dae8}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section class="hero">
+  <img src="icon.png" alt="Orbit Hop">
+  <h1>ORBIT <i>HOP</i></h1>
+  <p class="tagline">Gravity, timing, and one more hop.</p>
+  <a class="cta" href="#" aria-disabled="true">Coming to Google Play</a>
+  <span class="soon">In testing</span>
+</section>
+
+<div class="how">
+  <h2>How it plays</h2>
+  <p>
+    Your satellite circles a planet. Tap and it flies off on a tangent — the line it was
+    already travelling. Time it so that line passes through the middle of the next orbit
+    and you are caught. Pass close to the centre for a <b>PERFECT</b> and the combo climbs.
+    Miss, and you drift off the screen.
+  </p>
+</div>
+
+<div class="grid">
+  <div class="tile cool"><b>100</b><span>ranks to climb</span></div>
+  <div class="tile star"><b>100</b><span>collectible moons</span></div>
+  <div class="tile"><b>20</b><span>languages</span></div>
+  <div class="tile good"><b>Offline</b><span>no connection needed</span></div>
+</div>
+
+<h2 class="section">What is in it</h2>
+<ul>
+  <li><b>Ranks.</b> One hundred of them, from Rookie Navigator to Primordial Navigator V at 1,900 hops.</li>
+  <li><b>A hangar of moons.</b> One hundred satellites, each with its own generated surface — craters, ice, lava, canyons, storms. They change how your satellite looks and nothing else: no moon makes the game easier.</li>
+  <li><b>Daily missions and stars.</b> Five missions a day, and stars you spend in the hangar.</li>
+  <li><b>Twenty languages,</b> including right-to-left Arabic. English by default, chosen on first launch and changeable in Settings.</li>
+  <li><b>Plays offline.</b> Everything except watching an ad works with no connection at all.</li>
+</ul>
+
+<h2 class="section">Ads, plainly</h2>
+<div class="note">
+  <p style="margin:0 0 10px">
+    The game is free and carries ads from Google AdMob: a banner, and rewarded video you
+    choose to watch to continue a run or collect stars. Nothing in the game is locked
+    behind an ad — declining one only means you do not get that reward.
+  </p>
+  <p style="margin:0">
+    No ads appear during the first five launches, and none ever interrupt a run.
+    What Google receives when an ad is shown is set out in the
+    <a href="privacy.html">privacy policy</a>.
+  </p>
+</div>
+
+<details class="ko">
+<summary>한국어 (Korean)</summary>
+<div lang="ko">
+<p>
+  <b>Orbit Hop</b> — 위성이 행성을 돌고 있습니다. 화면을 탭하면 돌던 방향 그대로
+  접선으로 날아갑니다. 그 직선이 다음 궤도의 한가운데를 지나도록 타이밍을 맞추면
+  포획되고, 중심에 가까울수록 <b>PERFECT</b>와 함께 콤보가 쌓입니다. 빗나가면 화면 밖으로
+  사라집니다.
+</p>
+<p>
+  100단계 티어, 각기 다른 지형이 생성되는 수집용 위성 100종, 일일 미션과 스타,
+  20개 언어(아랍어 RTL 포함)를 담았습니다. 위성은 외형만 바뀌고 난이도에는 영향을 주지
+  않습니다. <b>인터넷 없이도 전부 플레이할 수 있습니다</b> — 광고 시청만 제외하고요.
+</p>
+<p>
+  무료이며 Google AdMob 광고가 들어갑니다. 하단 배너와, 이어하기·스타 충전을 위해 직접
+  선택해서 보는 보상형 광고입니다. <b>광고를 보지 않아도 막히는 콘텐츠는 없고</b>, 플레이
+  도중에 광고가 끼어들지 않으며, 처음 다섯 번 실행 동안에는 배너도 나오지 않습니다.
+  Google이 무엇을 받는지는 <a href="privacy.html">개인정보 처리방침</a>에 적어 두었습니다.
+</p>
+</div>
+</details>
+
+<footer>
+  <span>Orbit Hop</span>
+  <a href="privacy.html">Privacy policy</a>
+  <a href="mailto:kakimind@gmail.com">Contact</a>
+</footer>
+
+</div>
+</body>
+</html>
