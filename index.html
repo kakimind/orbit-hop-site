@@ -31,7 +31,7 @@ h1 i{font-style:normal;color:var(--a)}
 .cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;
   min-height:56px;padding:0 30px;border-radius:9999px;background:var(--ink);color:var(--bg);
   text-decoration:none;font-weight:700;font-size:17px}
-.cta:active{transform:scale(.985)}
+.cta{cursor:default}
 .soon{display:block;margin-top:14px;font-family:var(--mono);font-size:12.5px;
   letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
@@ -76,7 +76,8 @@ footer a{color:var(--b)}
   <img src="icon.png" alt="Orbit Hop">
   <h1>ORBIT <i>HOP</i></h1>
   <p class="tagline">Gravity, timing, and one more hop.</p>
-  <a class="cta" href="#" aria-disabled="true">Coming to Google Play</a>
+  <!-- Swap for the Play listing link once the app is published. -->
+  <span class="cta" role="note">Coming to Google Play</span>
   <span class="soon">In testing</span>
 </section>
 
