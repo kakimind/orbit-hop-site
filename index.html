@@ -1,87 +1,262 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#fbf8ff">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Orbit Hop — 단 한 번의 탭으로, 다음 궤도로</title>
 <meta name="description" content="한 번의 탭으로 궤도 사이를 도약하는 Android 아케이드 게임. 100단계 티어, 위성 100종, 일일 미션과 20개 언어. 인터넷 없이도 기본 플레이를 즐기세요.">
 <meta property="og:title" content="Orbit Hop — 단 한 번의 탭으로, 다음 궤도로">
 <meta property="og:description" content="타이밍을 잡고, 궤도를 잇고, 나만의 위성을 모으세요. Android 출시 준비 중.">
+<meta property="og:type" content="website">
 <meta property="og:image" content="https://kakimind.github.io/orbit-hop-site/assets/orbit-art.png">
 <meta property="og:url" content="https://kakimind.github.io/orbit-hop-site/">
-<link rel="icon" href="icon.png"><link rel="stylesheet" href="site.css">
+<link rel="icon" href="icon.png">
+<link rel="canonical" href="https://kakimind.github.io/orbit-hop-site/">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --paper: #fafaf6; --paper-raised: #ffffff; --ink: #101012;
+    --ink-soft: #55534c; --ink-faint: #94918a; --rule: #d8d5cb;
+    --spot: #e8502f; --focus: #101012;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #121210; --paper-raised: #1a1a17; --ink: #f2f0e8;
+      --ink-soft: #b5b1a5; --ink-faint: #706d63; --rule: #38362f; --focus: #f2f0e8;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #121210; --paper-raised: #1a1a17; --ink: #f2f0e8;
+    --ink-soft: #b5b1a5; --ink-faint: #706d63; --rule: #38362f; --focus: #f2f0e8;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  .masthead-font { font-family: "Big Shoulders Display", "Archivo Black", sans-serif; }
+  .mono { font-family: "Space Mono", ui-monospace, monospace; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0; z-index: 50;
+    background: var(--ink); color: var(--paper); padding: 0.7rem 1.1rem;
+    font-family: "Space Mono"; font-size: 0.78rem;
+  }
+  .skip:focus { left: 0.8rem; top: 0.8rem; }
+
+  .page { max-width: 76rem; margin: 0 auto; padding: 0 1.8rem; }
+
+  .runhead {
+    position: fixed; top: 0; bottom: 0; left: 0.9rem; z-index: 20;
+    display: flex; align-items: center; pointer-events: none;
+  }
+  .runhead span {
+    display: inline-block; writing-mode: vertical-rl;
+    font-family: "Space Mono"; font-size: 0.72rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  @media (max-width: 980px) { .runhead { display: none; } }
+
+  .backbar {
+    position: fixed; top: 1.2rem; right: 1.6rem; z-index: 20;
+    font-family: "Space Mono"; font-size: 0.75rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-soft);
+    border-bottom: 1px solid var(--ink-faint); padding-bottom: 0.2rem;
+  }
+  .backbar:hover { color: var(--ink); border-color: var(--ink); }
+
+  .opener {
+    padding: 6rem 0 3rem; border-bottom: 3px solid var(--ink);
+    display: grid; grid-template-columns: 1.3fr 1fr; gap: 3rem; align-items: end;
+  }
+  .opener .kicker {
+    font-family: "Space Mono"; font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--spot); display: block; margin-bottom: 1.2rem;
+  }
+  .opener h1 {
+    font-family: "Big Shoulders Display"; font-weight: 900;
+    font-size: clamp(2.4rem, 6.4vw, 4.6rem); line-height: 0.95; margin: 0; text-transform: uppercase;
+  }
+  .opener .dek { font-style: italic; font-size: 1.2rem; color: var(--ink-soft); margin: 1.4rem 0 0; max-width: 32rem; }
+  .opener .byline { font-family: "Space Mono"; font-size: 0.78rem; color: var(--ink-faint); text-align: right; line-height: 1.9; }
+  @media (max-width: 760px) { .opener { grid-template-columns: 1fr; } .opener .byline { text-align: left; } }
+
+  .plate-row {
+    padding: 3rem 0; display: grid; grid-template-columns: 1fr 1.3fr;
+    gap: 3rem; align-items: center; border-bottom: 1px solid var(--rule);
+  }
+  .plate { position: relative; border: 1px solid var(--rule); background: var(--paper-raised); padding: 1.6rem; margin: 0; }
+  .plate .shot { width: 100%; height: auto; border-radius: 4px; display: block; }
+  .plate .cap { margin-top: 1rem; font-family: "Space Mono"; font-size: 0.72rem; color: var(--ink-faint); display: flex; justify-content: space-between; gap: 1rem; }
+  .lede p.body:first-of-type::first-letter {
+    font-family: "Big Shoulders Display"; font-weight: 900; font-size: 3.4rem;
+    line-height: 0.8; float: left; padding: 0.05em 0.12em 0 0; color: var(--spot);
+  }
+  .lede p.body { margin: 0 0 1.1rem; max-width: 34rem; }
+
+  .factbox { border-top: 2px solid var(--ink); padding-top: 1rem; margin-top: 1.4rem; max-width: 30rem; }
+  .factbox dl { display: flex; flex-wrap: wrap; gap: 0 1.8rem; margin: 0; }
+  .factbox dt { font-family: "Space Mono"; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 0; }
+  .factbox dd { font-family: "Space Mono"; font-size: 0.85rem; margin: 0.1rem 0 0.8rem; color: var(--ink); }
+
+  .playbadge {
+    display: inline-flex; align-items: center; gap: 0.6em; margin-top: 1.6rem; padding: 0.8rem 1.3rem;
+    background: var(--ink); color: var(--paper); font-family: "Space Mono"; font-size: 0.82rem;
+    letter-spacing: 0.04em; text-transform: uppercase; transition: background-color 0.2s ease;
+  }
+  .playbadge:hover { background: var(--spot); color: #fff; }
+  .playbadge.pending { background: none; color: var(--ink-soft); border: 1px dashed var(--ink-faint); }
+  .badge-note { font-family: "Space Mono"; font-size: 0.72rem; color: var(--ink-faint); margin: 0.7rem 0 0; }
+
+  @media (max-width: 760px) { .plate-row { grid-template-columns: 1fr; } }
+
+  .pull-section { padding: 3.5rem 0; border-bottom: 1px solid var(--rule); }
+  .pull-section .label { font-family: "Space Mono"; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1.8rem; }
+  .feature-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .feature-list li { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1.4rem; padding: 1.4rem 0; border-top: 1px solid var(--rule); }
+  .feature-list li:first-child { border-top: none; }
+  .feature-list .fnum { font-family: "Big Shoulders Display"; font-weight: 900; font-size: 1.8rem; color: var(--spot); opacity: 0.5; }
+  .feature-list h3 { font-family: "Big Shoulders Display"; font-weight: 700; text-transform: uppercase; font-size: 1.15rem; margin: 0 0 0.35rem; }
+  .feature-list p { margin: 0; color: var(--ink-soft); max-width: 36rem; }
+
+  .figures { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 2px solid var(--ink); margin: 0; }
+  .figures div { padding: 1.4rem 1.4rem 1.6rem; border-left: 1px solid var(--rule); }
+  .figures div:first-child { border-left: none; padding-left: 0; }
+  .figures dt { font-family: "Space Mono"; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 0.5rem; }
+  .figures dd { margin: 0; font-family: "Big Shoulders Display"; font-weight: 900; font-size: 2.6rem; line-height: 1; }
+  .figures dd span { font-family: "Space Mono"; font-weight: 400; font-size: 0.78rem; color: var(--ink-soft); display: block; margin-top: 0.5rem; letter-spacing: 0.02em; line-height: 1.5; }
+  @media (max-width: 760px) {
+    .figures { grid-template-columns: repeat(2, 1fr); }
+    .figures div:nth-child(odd) { border-left: none; padding-left: 0; }
+  }
+
+  .note-row { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3rem; align-items: start; }
+  .note-row .standfirst { font-style: italic; font-size: 1.1rem; color: var(--ink-soft); margin: 0; max-width: 24rem; }
+  .note-row .body { margin: 0 0 1.1rem; max-width: 36rem; }
+  .note-row .body:last-of-type { margin-bottom: 0; color: var(--ink-soft); }
+  @media (max-width: 760px) { .note-row { grid-template-columns: 1fr; gap: 1.8rem; } }
+
+  .readlink {
+    display: inline-block; margin-top: 1.6rem; font-family: "Space Mono";
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--spot); border-bottom: 1px solid currentColor; padding-bottom: 0.2rem;
+  }
+  .readlink:hover { color: var(--ink); }
+
+  .colophon { padding: 4rem 0 6rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem; }
+  .colophon .masthead-font { font-weight: 900; font-size: 1.4rem; text-transform: uppercase; }
+  .colophon .meta { font-family: "Space Mono"; font-size: 0.78rem; color: var(--ink-soft); text-align: right; line-height: 1.8; }
+  .colophon .meta a:hover { color: var(--ink); text-decoration: underline; }
+  @media (max-width: 760px) { .colophon .meta { text-align: left; } }
+</style>
 </head>
 <body>
+
 <a class="skip" href="#main">본문으로 바로가기</a>
-<header class="header"><div class="container nav-row">
-<a class="brand" href="#overview" aria-label="Orbit Hop 게임 소개"><img src="icon.png" width="36" height="36" alt=""><span>Orbit Hop</span></a>
-<nav aria-label="주 메뉴"><a href="#overview">게임 소개</a><a href="#gameplay">핵심 플레이</a><a href="#collection">위성과 기록</a><a href="#how-to-play">플레이 방법</a></nav>
-<a class="nav-policy" href="privacy.html">개인정보 처리방침 <span aria-hidden="true">↗</span></a>
-</div></header>
-<main id="main">
-<section class="hero" id="overview"><div class="container hero-grid">
-<div class="hero-copy">
-<div class="badges"><span class="badge blue"><i aria-hidden="true"></i> Android · 출시 준비 중</span><span class="badge">원터치 아케이드</span></div>
-<h1>궤도 사이를 뛰어요,<br><em>단 한 번의 탭</em>으로</h1>
-<p class="lede">위성이 행성을 도는 순간, 타이밍을 잡으세요.<br class="desktop-break"> 탭 한 번으로 궤도를 벗어나 다음 행성으로.<br class="desktop-break"> 한 번 더, 조금 더 멀리. 나만의 비행을 이어가세요.</p>
-<div class="actions"><a class="button primary" href="#how-to-play"><span aria-hidden="true">↗</span> 플레이 방법 보기</a><a class="button secondary" href="#collection">위성 컬렉션 살펴보기 <span aria-hidden="true">→</span></a></div>
-<div class="hero-notes"><span><b aria-hidden="true">✦</b> 기본 플레이는 오프라인으로</span><span><b aria-hidden="true">◎</b> 20개 언어 지원</span></div>
+<div class="runhead"><span>KAKIMIND — ISSUE № 01 — FEATURE: ORBIT HOP</span></div>
+<a class="backbar" href="https://kakimind.github.io/">← Back to Issue Index</a>
+
+<div class="page" id="main">
+  <section class="opener">
+    <div>
+      <span class="kicker">§06 — Orbital Arcade — Coming Soon</span>
+      <h1>Orbit<br>Hop</h1>
+      <p class="dek">단 한 번의 탭으로, 다음 궤도로.</p>
+    </div>
+    <div class="byline">BY KAKIMIND<br>SOLO ANDROID STUDIO<br>FEATURED IN ISSUE № 01</div>
+  </section>
+
+  <section class="plate-row">
+    <figure class="plate">
+      <img class="shot" src="assets/orbit-art.png" width="1376" height="768" alt="코발트와 주황빛 궤도가 행성 사이를 잇는 Orbit Hop 콘셉트 아트" fetchpriority="high">
+      <div class="cap"><span>FIG. 01</span><span>콘셉트 아트 — 일러스트</span></div>
+    </figure>
+    <div class="lede">
+      <p class="body">위성이 행성을 도는 순간 화면을 탭하면, 공전 궤도의 접선 방향으로 곧게 날아간다. 그 직선이 다음 행성의 궤도를 지나도록 타이밍을 잡는 것, 그게 이 게임의 전부다.</p>
+      <p class="body">버튼도 조이스틱도 없다. 대신 멀리 나아갈수록 공전이 빨라지고, 매번 다른 크기와 방향의 행성이 이어진다. 안착이 정확할수록 PERFECT 콤보가 쌓이고, 성공한 도약 하나가 1점이 된다.</p>
+      <div class="factbox">
+        <dl>
+          <div><dt>Platform</dt><dd>Android</dd></div>
+          <div><dt>Status</dt><dd>Coming Soon</dd></div>
+          <div><dt>Genre</dt><dd>Orbital Arcade</dd></div>
+        </dl>
+      </div>
+      <span class="playbadge pending">◷ Google Play 출시 준비 중</span>
+      <p class="badge-note">다운로드 링크는 공개 출시 후 이곳에 안내합니다.</p>
+    </div>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">What's Inside</div>
+    <ul class="feature-list">
+      <li><span class="fnum">01</span><div><h3>한 번의 탭으로 도약</h3><p>화면을 탭하면 위성이 공전 궤도의 접선 방향으로 날아갑니다. 날아갈 직선이 다음 궤도를 지나도록 순간을 포착하세요.</p></div></li>
+      <li><span class="fnum">02</span><div><h3>매번 달라지는 궤도</h3><p>크기와 위치, 공전 방향이 다른 행성들이 이어집니다. 더 멀리 나아갈수록 빨라지는 공전에 맞춰 새로운 타이밍을 찾아보세요.</p></div></li>
+      <li><span class="fnum">03</span><div><h3>정확할수록 PERFECT</h3><p>발사 궤적이 다음 궤도 중심에 가까울수록 정밀도가 높아집니다. PERFECT로 콤보를 쌓고, 성공한 도약 수로 최고 기록에 도전하세요.</p></div></li>
+      <li><span class="fnum">04</span><div><h3>스타로 모으는 위성</h3><p>달·유로파·이오·타이탄·엔셀라두스에서 영감을 받은 위성부터 가상의 세계까지. 위성은 외형만 바뀌고 성능 차이는 없으니 취향대로 고르세요.</p></div></li>
+    </ul>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">By the Numbers</div>
+    <dl class="figures">
+      <div><dt>도전할 티어</dt><dd>100<span>최고 도약 기록에 따라 성장하는 단계</span></dd></div>
+      <div><dt>수집할 위성</dt><dd>100<span>크레이터·얼음·화산 등 다양한 지형</span></dd></div>
+      <div><dt>매일 새로운 목표</dt><dd>5<span>플레이하고 스타 보상 받는 일일 미션</span></dd></div>
+      <div><dt>지원 언어</dt><dd>20<span>첫 실행에서 선택, 설정에서 변경</span></dd></div>
+    </dl>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">How to Play</div>
+    <div class="note-row">
+      <p class="standfirst">복잡한 버튼 대신, 나만의 타이밍. 세 단계면 다음 궤도로 넘어갑니다.</p>
+      <ul class="feature-list">
+        <li><span class="fnum">01</span><div><h3>궤도를 살펴보세요</h3><p>게임을 시작하면 위성이 행성 주위를 돕니다. 다음 행성이 어디에 있는지, 위성이 어느 방향으로 움직이는지 확인하세요.</p></div></li>
+        <li><span class="fnum">02</span><div><h3>타이밍에 맞춰 탭</h3><p>위성은 탭하는 순간의 진행 방향으로 곧게 날아갑니다. 그 직선이 다음 행성의 궤도를 지나도록 화면을 탭하세요.</p></div></li>
+        <li><span class="fnum">03</span><div><h3>안착하고, 다시 도약</h3><p>다음 궤도에 닿으면 자동으로 공전을 시작합니다. 빗나가 화면 밖으로 나가면 비행이 끝납니다. 다시 도전해 기록을 높여보세요.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">Offline &amp; Records</div>
+    <div class="note-row">
+      <p class="standfirst">인터넷 없이도 비행은 계속됩니다. 기록은 플레이한 기기에 남습니다.</p>
+      <div>
+        <p class="body">기본 플레이와 위성 수집, 일일 미션과 기록은 모두 오프라인으로 이용할 수 있습니다. 광고 시청과 외부 공유·스토어 기능에는 연결이 필요할 수 있습니다.</p>
+        <p class="body">최고 기록, 미션 진행도, 보유 위성과 설정은 기기에 저장됩니다. 앱 데이터를 지우거나 기기를 바꾸면 자동으로 복원되지 않습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">A Clear Flight Plan — 광고 정책</div>
+    <div class="note-row">
+      <p class="standfirst">배너와, 직접 선택하는 보상형 광고만 연결되어 있습니다.</p>
+      <div>
+        <ul class="feature-list">
+          <li><span class="fnum">01</span><div><h3>첫 5회 실행은 배너 없이</h3><p>하단 배너는 6회차 실행부터 표시됩니다. 플레이 중 갑자기 화면을 덮는 전면광고는 사용하지 않습니다.</p></div></li>
+          <li><span class="fnum">02</span><div><h3>이어하기와 스타 충전은 선택</h3><p>보상형 광고는 첫 실행부터 직접 선택할 수 있습니다. 시청을 완료하면 마지막 안착 궤도에서 이어가거나 50스타를 받습니다. 광고 스타는 하루 최대 150개입니다.</p></div></li>
+          <li><span class="fnum">03</span><div><h3>광고를 완료했을 때만 보상</h3><p>오프라인·취소·광고 로드 실패에는 보상이 지급되지 않습니다. 현재 테스트 빌드는 테스트 광고 모드입니다.</p></div></li>
+        </ul>
+        <a class="readlink" href="privacy.html">Google AdMob 및 개인정보 처리 안내 →</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span class="masthead-font">Kakimind</span>
+    <div class="meta">
+      <a href="privacy.html">개인정보처리방침</a> · <a href="https://kakimind.github.io/">다른 작품 보기</a><br>
+      Contact: <a href="mailto:kakimind@gmail.com">kakimind@gmail.com</a><br>
+      © 2026 kakimind — Orbit Hop
+    </div>
+  </footer>
 </div>
-<figure class="hero-art"><img src="assets/orbit-art.png" width="1376" height="768" alt="코발트와 주황빛 궤도가 행성 사이를 잇는 Orbit Hop 콘셉트 아트" fetchpriority="high"><figcaption><span>ORBIT HOP <b>CONCEPT ART</b></span><span>타이밍이 만드는 도약</span></figcaption></figure>
-</div></section>
-
-<section class="section lavender" id="gameplay"><div class="container">
-<div class="section-head"><div><p class="eyebrow orange">ONE TAP. NEXT ORBIT.</p><h2>간단한 조작, 끝없는 도전</h2></div><p>복잡한 버튼 대신, 나만의 타이밍.<br>다음 궤도를 향한 한 번의 도약에 집중하세요.</p></div>
-<div class="cards three">
-<article class="card"><span class="feature-icon warm" aria-hidden="true">◎</span><h3>한 번의 탭으로 도약</h3><p class="mono caption">ONE-TAP CONTROL</p><p>화면을 탭하면 위성이 공전 궤도의 접선 방향으로 날아갑니다. 날아갈 직선이 다음 궤도를 지나도록 순간을 포착하세요.</p><div class="card-foot"><span>조작은 단순하게</span><strong>화면 탭 한 번</strong></div></article>
-<article class="card"><span class="feature-icon cool" aria-hidden="true">∞</span><h3>매번 달라지는 궤도</h3><p class="mono caption">A NEW FLIGHT, EVERY RUN</p><p>크기와 위치, 공전 방향이 다른 행성들이 이어집니다. 더 멀리 나아갈수록 빨라지는 공전에 맞춰 새로운 타이밍을 찾아보세요.</p><div class="card-foot"><span>나의 다음 목표</span><strong>한 궤도 더 멀리</strong></div></article>
-<article class="card"><span class="feature-icon cool" aria-hidden="true">✧</span><h3>정확할수록 PERFECT</h3><p class="mono caption">PRECISION &amp; COMBO</p><p>발사 궤적이 다음 궤도 중심에 가까울수록 정밀도가 높아집니다. PERFECT로 콤보를 쌓고, 성공한 도약 수로 최고 기록에 도전하세요.</p><div class="card-foot"><span>성공한 도약</span><strong class="green">1회 = 1점</strong></div></article>
-</div></div></section>
-
-<section class="section white" id="collection"><div class="container">
-<div class="section-head"><div><p class="eyebrow blue-text">YOUR MOONS. YOUR JOURNEY.</p><h2>도약은 기록으로,<br class="mobile-break"> 스타는 나만의 위성으로</h2></div><p>조금씩 쌓이는 기록과 수집의 즐거움.<br>진행도는 플레이한 기기에 저장됩니다.</p></div>
-<div class="collection-grid">
-<article class="collection-card"><p class="eyebrow">THE MOON COLLECTION</p>
-<div class="moon-scene" aria-hidden="true"><span class="orbit-ring"></span><span class="moon big-moon"></span><span class="moon ice-moon"></span><span class="moon lava-moon"></span><span class="tiny-star">✦</span></div><p class="caption">컬렉션을 표현한 일러스트</p>
-<h3>당신의 다음 위성은?</h3><p>달·유로파·이오·타이탄·엔셀라두스에서 영감을 받은 위성부터 가상의 새로운 세계까지. 스타를 모아 격납고에서 만나보세요.</p>
-<div class="collection-note"><span aria-hidden="true">✧</span> 위성은 외형만 바뀝니다.<br>성능 차이 없이, 취향대로 고르세요.</div></article>
-<div class="collection-detail"><div class="stats-grid">
-<article class="stat"><p>도전할 티어</p><strong>100<span>단계</span></strong><p>최고 도약 기록에 따라 성장</p></article>
-<article class="stat"><p>수집할 위성</p><strong>100<span>종</span></strong><p>크레이터·얼음·화산 등 다양한 지형</p></article>
-<article class="stat"><p>매일 새로운 목표</p><strong>5<span>개 미션</span></strong><p>플레이하고 스타 보상 받기</p></article>
-<article class="stat"><p>나에게 편한 언어</p><strong>20<span>개 언어</span></strong><p>첫 실행에서 선택, 설정에서 변경</p></article>
-</div>
-<article class="capture-card"><svg viewBox="0 0 140 140" role="img" aria-label="위성은 공전 궤도에서 접선 방향으로 도약합니다"><circle cx="66" cy="76" r="45" fill="none" stroke="#b9bce1" stroke-width="2" stroke-dasharray="4 5"/><circle cx="66" cy="76" r="28" fill="#dfe0ff"/><circle cx="66" cy="76" r="17" fill="#4B5BD6"/><path d="M66 31H126M119 25L126 31L119 37" fill="none" stroke="#E8502F" stroke-width="2"/><circle cx="66" cy="31" r="5" fill="#E8502F"/></svg>
-<div><h3>기록은 내 기기에</h3><p>최고 기록, 미션 진행도, 보유 위성과 설정은 기기에 저장됩니다. 앱 데이터를 지우거나 기기를 바꾸면 자동으로 복원되지 않습니다.</p><a class="text-link" href="privacy.html">저장 정보와 광고 데이터 안내 <span aria-hidden="true">↗</span></a></div></article>
-</div></div></div></section>
-
-<section class="section" id="how-to-play"><div class="container">
-<div class="section-head"><div><p class="eyebrow orange">READY FOR YOUR FIRST HOP?</p><h2>세 단계면, 다음 궤도로</h2></div></div>
-<div class="cards three steps">
-<article class="card"><span class="step-number">01</span><h3>궤도를 살펴보세요</h3><p>게임을 시작하면 위성이 행성 주위를 돕니다. 다음 행성이 어디에 있는지, 위성이 어느 방향으로 움직이는지 확인하세요.</p><p class="step-label">살피고</p></article>
-<article class="card"><span class="step-number">02</span><h3>타이밍에 맞춰 탭</h3><p>위성은 탭하는 순간의 진행 방향으로 곧게 날아갑니다. 그 직선이 다음 행성의 궤도를 지나도록 화면을 탭하세요.</p><p class="step-label">탭하고</p></article>
-<article class="card"><span class="step-number">03</span><h3>안착하고, 다시 도약</h3><p>다음 궤도에 닿으면 자동으로 공전을 시작합니다. 빗나가 화면 밖으로 나가면 비행이 끝납니다. 다시 도전해 기록을 높여보세요.</p><p class="step-label">한 번 더!</p></article>
-</div>
-<aside class="offline-note"><span class="feature-icon ink" aria-hidden="true">↗</span><div><h3>인터넷 없이도 계속되는 비행</h3><p>Android 앱의 기본 플레이·위성 수집·미션·기록은 오프라인으로 이용할 수 있습니다. 광고 시청과 외부 공유·스토어 기능은 연결이 필요할 수 있습니다.</p></div><span class="badge">OFFLINE PLAY</span></aside>
-</div></section>
-
-<section class="section white" id="ads"><div class="container ads-grid">
-<div><p class="eyebrow blue-text">A CLEAR FLIGHT PLAN</p><h2>광고는 이렇게<br>동작해요</h2><p>배너와 직접 선택하는 보상형 광고가<br>연결되어 있습니다.</p></div>
-<div class="ad-notes">
-<article><span class="ad-index">01</span><div><h3>첫 5회 실행은 배너 없이</h3><p>하단 배너는 6회차 실행부터 표시됩니다. 플레이 중 갑자기 화면을 덮는 전면광고는 사용하지 않습니다.</p></div></article>
-<article><span class="ad-index">02</span><div><h3>이어하기와 스타 충전은 선택</h3><p>보상형 광고는 첫 실행부터 직접 선택할 수 있습니다. 시청을 완료하면 마지막 안착 궤도에서 이어가거나 50스타를 받습니다. 광고 스타는 하루 최대 150개입니다.</p></div></article>
-<article><span class="ad-index">03</span><div><h3>광고를 완료했을 때만 보상</h3><p>오프라인·취소·광고 로드 실패에는 보상이 지급되지 않습니다. 현재 테스트 빌드는 테스트 광고 모드입니다.</p></div></article>
-<a class="text-link" href="privacy.html">Google AdMob 및 개인정보 처리 안내 <span aria-hidden="true">↗</span></a>
-</div></div></section>
-
-<section class="final" id="release"><div class="container final-inner">
-<span class="badge dark-badge">YOUR NEXT ORBIT AWAITS</span><h2>다음 궤도로 도약할<br>준비가 되셨나요?</h2>
-<p>짧은 한 판, 조금 더 정확한 타이밍.<br>나만의 위성과 함께 최고 기록에 도전하세요.</p>
-<p class="release-status">Google Play 출시 준비 중</p><p class="release-detail">다운로드 링크는 공개 출시 후 이곳에 안내합니다.</p>
-<a class="button light" href="mailto:kakimind@gmail.com">문의 및 피드백 <span aria-hidden="true">↗</span></a>
-<div class="final-facts"><span>100 RANKS</span><span>100 MOONS</span><span>20 LANGUAGES</span></div>
-</div></section>
-</main>
-<footer class="footer"><div class="container footer-main"><div><a class="brand" href="#overview">Orbit Hop</a><p>단 한 번의 탭으로, 다음 궤도로.</p></div><nav aria-label="하단 메뉴"><a href="#how-to-play">플레이 방법</a><a href="privacy.html">개인정보 처리방침</a><a href="mailto:kakimind@gmail.com">문의하기</a></nav></div><div class="container footer-bottom"><span>© 2026 Orbit Hop · kakimind</span><span>ANDROID ORBITAL ARCADE</span></div></footer>
-</body></html>
+</body>
+</html>
